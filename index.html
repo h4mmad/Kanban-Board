@@ -9,7 +9,7 @@
 
   <body>
     <div class="container">
-        <h1 class="display-3">Kanban</h1>
+        <h1 class="display-3" style="user-select: none;">Kanban</h1>
         <form id="form1">
             <div class="mb-3">
             <input placeholder="Your task" class="form-control" id="inputBox">
@@ -17,45 +17,45 @@
             <button type="submit" class="btn btn-primary">Add Task</button>
         </form>
 
+        <div class="bg-danger bg-opacity-75 rounded mt-4 d-flex justify-content-center align-items-center" style="height: 5rem; width: auto;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="3rem" height="4rem" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
+            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>
+        </div>
 
-        <div class="text-start mt-5">
+        <div class="text-start mt-3">
             <div class="row">
 
               <!-- To do column -->
               <div class="col" id="todo">
-                <h1 class="text-info">Todo</h1>
+                <h1 class="text-info" style="user-select: none;">Todo</h1>
 
-                 <div class="card" style="width: auto;">
-                    <div class="card-body bg-info bg-opacity-25">
+                 
+                    <div class="card-body card bg-info bg-opacity-25">
                       <h3 class="card-title">Brush</h3>
-                      <button class="btn btn-primary btn-sm">Move</button>
                     </div>
-                  </div>
+                  
 
               </div>
               <!-- ------ -->
 
               <!-- doing column -->
               <div class="col" id="doing">
-                <h1 class=" text-warning">Doing</h1>
-                <div class="card" style="width: auto;">
-                    <div class="card-body bg-warning bg-opacity-25">
+                <h1 class="text-warning" style="user-select: none;">Doing</h1>
+                    <div class="card card-body bg-warning bg-opacity-25">
                       <h3 class="card-title">Homework</h3>
-                      <button class="btn btn-primary btn-sm">Move</button>
                     </div>
-                  </div>
+                  
               </div>
               <!-- ------ -->
 
               <!-- done column -->
               <div class="col" id="done">
-                <h1 class="text-success">Done</h1>
-                  <div class="card" style="width: auto;">
-                      <div class="card-body bg-success bg-opacity-25">
+                <h1 class="text-success" style="user-select: none;">Done</h1>
+                      <div class="card card-body bg-success bg-opacity-25">
                         <h3 class="card-title">Dishes</h3>
-                        <button class="btn btn-danger btn-sm">Remove</button>
                       </div>
-                    </div>
               </div>
               <!-- ------ -->
             </div>
