@@ -1,35 +1,83 @@
 import {uuidv4} from "./uuid.js";
+import { deleteDiv } from "./deleteDiv.js";
+import { changeColumn } from "./changeColumn.js";
+import { getFirestore, updateDoc, doc,arrayUnion, getDoc, setDoc} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-firestore.js';
+import  {docRef} from './config.js' 
 
-const $ = (x) => {
-    return document.getElementById(x);
-}
 
-const $create = (x) => {
-    return document.createElement(x);
-}
 
-const todoCol = $("todo");
+const todoCol = document.getElementById("todos");
 todoCol.addEventListener('drop', drop);
 todoCol.addEventListener('dragover', allowDrop);
+todoCol.addEventListener('dragenter', dragEnter);
+todoCol.addEventListener('dragleave', dragLeave);
+
+// const callback = (mutationList, observer) => {
+//   for (const mutation of mutationList) {
+//     if (mutation.type === 'childList') {
+//       if (mutation.addedNodes.length === 1){
+//         console.log('A node is added');
+//         console.log(mutation.addedNodes[0].id)
+//       }
+//       else{
+//         console.log('Node removed');
+//       }
+//     } else if (mutation.type === 'attributes') {
+//       console.log(`The ${mutation.attributeName} attribute was modified.`);
+//     }
+//   }
+// };
+// const options = {
+//     childList: true,
+//     attributes: true,
+//     characterData: true,
+// }
+// let observer = new MutationObserver(callback);
+// observer.observe(todoCol, options);
 
 
-const doingCol = $("doing");
+
+const doingCol = document.getElementById("doing");
 doingCol.addEventListener('drop', drop);
 doingCol.addEventListener('dragover', allowDrop);
+doingCol.addEventListener('dragenter', dragEnter);
+doingCol.addEventListener('dragleave', dragLeave);
 
-const doneCol = $("done");
+
+const doneCol = document.getElementById("done");
 doneCol.addEventListener('drop', drop);
 doneCol.addEventListener('dragover', allowDrop);
+doneCol.addEventListener('dragenter', dragEnter);
+doneCol.addEventListener('dragleave', dragLeave);
 
 
+
+function dragEnter(ev){
+  if (ev.target.id === 'todos'){
+    ev.target.style.border = '2px rgb(13,202,240) dashed';
+    ev.target.style.borderRadius = '10px';
+  }
+  if (ev.target.id === 'doing'){
+    ev.target.style.border = '2px rgb(255,193,7) dashed';
+    ev.target.style.borderRadius = '10px';
+  }
+  if (ev.target.id === 'done'){
+    ev.target.style.border = '2px rgb(25,135,84) dashed';
+    ev.target.style.borderRadius = '10px';
+  }
+}
+
+function dragLeave(ev){
+  ev.target.style.border = '';
+}
 
 
 
 
 
 function inputHandler(){
-  const inputBox = $("inputBox");
-  const form = $("form1");
+  const inputBox = document.getElementById("inputBox");
+  const form = document.getElementById("form1");
   let task = "";
 
   inputBox.addEventListener('input', (event)=>{
@@ -48,50 +96,32 @@ function inputHandler(){
   })
 }
 
-
-
 function createCard(text){
-    const cardBody = $create("div");
+    const cardBody = document.createElement("div");
     cardBody.classList.add('card', 'card-body', 'bg-info' ,'bg-opacity-25', 'mt-2');
     cardBody.style.cursor = "move";
     cardBody.setAttribute('draggable', 'true');
-    cardBody.setAttribute('id', uuidv4());
+
+    const cardId = uuidv4();
+    cardBody.setAttribute('id', cardId);
     cardBody.addEventListener('dragstart', drag);
-
-    cardBody.addEventListener('dragend', (ev)=>{
-      ev.target.classList.remove('border', 'border-dark');
-
-      if (ev.currentTarget.parentNode.id === 'todo'){
-        ev.target.classList.add('bg-info');
-        ev.target.classList.remove('bg-warning');
-        ev.target.classList.remove('bg-success');
-        console.log(ev.target.classList);
-      }
-      if (ev.currentTarget.parentNode.id === 'doing'){
-        ev.target.classList.add('bg-warning');
-        ev.target.classList.remove('bg-info');
-        ev.target.classList.remove('bg-success');
-        console.log(ev.currentTarget);
-      }
-      if (ev.currentTarget.parentNode.id === 'done'){
-        ev.target.classList.add('bg-success');
-        ev.target.classList.remove('bg-info');
-        ev.target.classList.remove('bg-warning');
-        console.log(ev.target.classList);
-      }
-    })
-
-    const cardTitle = $create("h3");
+    cardBody.addEventListener('dragend', changeColumn);
+    cardBody.setAttribute('data-column-type', 'todos');
+    const cardTitle = document.createElement("h3");
     cardTitle.className = "card-title";
     cardTitle.textContent = text;
-
     cardBody.appendChild(cardTitle);
-  
+    
+    
+    updateDoc(docRef, {
+      todos: arrayUnion({cardId : cardId, value: text})
+    });
+    
     return cardBody;
 }
 
 function allowDrop(ev) {
-  if (ev.target.id === 'todo' || ev.target.id  === 'doing' || ev.target.id === 'done'){
+  if (ev.target.id === 'todos' || ev.target.id  === 'doing' || ev.target.id === 'done'){
     ev.stopPropagation();
     ev.preventDefault();
   }
@@ -99,18 +129,28 @@ function allowDrop(ev) {
 
 function drag(ev) {
   ev.stopPropagation();
-  ev.target.classList.add('border', 'border-dark');
   ev.dataTransfer.setData("text", ev.target.id);
+  deleteDiv.classList.remove('invisible');
+  deleteDiv.classList.add('visible');
 }
 
 function drop(ev) {
   ev.stopPropagation();
   ev.preventDefault();
+  ev.target.style.border = "";
   let data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
 }
 
 
+
+
+// function clockHandler(){
+//   const d = new Date();
+//   clock.innerHTML = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+// }
+
+// setInterval(clockHandler, 1000);
 
 
 inputHandler();
