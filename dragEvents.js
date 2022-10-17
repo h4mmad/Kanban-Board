@@ -17,7 +17,7 @@ export function dragEnter(ev){
     }
   }
   
-export  function dragLeave(ev){
+export function dragLeave(ev){
     ev.target.style.border = '';
   }
   
@@ -33,8 +33,6 @@ export function allowDrop(ev) {
 export function drag(ev) {
     ev.stopPropagation();
     ev.dataTransfer.setData("text", ev.target.id);
-    deleteDiv.classList.remove('invisible');
-    deleteDiv.classList.add('visible');
   }
   
 export function drop(ev) {
@@ -42,4 +40,5 @@ export function drop(ev) {
     ev.preventDefault();
     const data = ev.dataTransfer.getData("text");
     ev.target.appendChild(document.getElementById(data));
+    ev.target.style.border = '';
   }

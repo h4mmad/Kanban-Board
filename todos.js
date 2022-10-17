@@ -1,11 +1,12 @@
 import { options } from "./mutationOptions.js";
-import { drop, allowDrop, dragEnter, dragLeave } from "./dragEvents.js";
+import { drop, allowDrop, dragEnter, dragLeave} from "./dragEvents.js";
 
 export const todosCol = document.getElementById("todos");
 todosCol.addEventListener('drop', drop);
 todosCol.addEventListener('dragover', allowDrop);
 todosCol.addEventListener('dragenter', dragEnter);
 todosCol.addEventListener('dragleave', dragLeave);
+
 
 
 function callback(mutationList) {
