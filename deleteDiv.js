@@ -1,7 +1,4 @@
 import { changeColumn } from "./changeColumn.js";
-import  {docRef} from './config.js';
-import { arrayRemove, updateDoc} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-firestore.js';
-
 
 export const deleteDiv = document.getElementById('delete-div');
 deleteDiv.addEventListener('drop', deleteDrop);
@@ -27,14 +24,6 @@ function deleteDrop(ev){
   deleteDiv.classList.add('invisible');
   deleteDiv.classList.remove('visible');
   deleteDiv.style.border = "";
-
-  updateDoc(docRef, {
-    todos: arrayRemove({cardId : cardId, value: toDelete.innerText}),
-    doing: arrayRemove({cardId : cardId, value: toDelete.innerText}),
-    done: arrayRemove({cardId : cardId, value: toDelete.innerText})
-  });
-
-
   toDelete.remove();
   return id;
 }
