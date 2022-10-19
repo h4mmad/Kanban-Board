@@ -1,10 +1,14 @@
 import {app} from './config.js'
 import {getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-auth.js'
-
+import { db } from './config.js';
+import {doc, getDoc} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-firestore.js';
+import { paintCard } from './createCard.js';
 
 const provider = new GoogleAuthProvider(); 
 
 const auth = getAuth(app);
+
+
 
 const signInButton = document.getElementById('sign-in-button');
 const profilePic = document.getElementById('profile-pic');
@@ -15,7 +19,7 @@ signInButton.addEventListener('click', ()=>{
         signIn(auth, provider);
     }
     else{
-        signOut();
+      auth.signOut();
     };
 });
 
@@ -32,29 +36,60 @@ async function signIn(auth, provider){
     }
 }
 
-function signOut(){
-    auth.signOut();
-    console.log('User signed out');
-}
 
-export let sharedUid = "";
 
-onAuthStateChanged(auth, (user) => {
+const doneCol = document.getElementById('done');
+const todoCol = document.getElementById('todos');
+const doingCol = document.getElementById('doing');
+
+
+export let docRef = ""
+
+onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
-      console.log('User is signed in---->');
       profilePic.setAttribute('src', user.photoURL);
       greetingText.textContent = 'Signed in';
       console.log(uid);
-      sharedUid = uid;
+      docRef = doc(db, "users", uid);
+
+
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const todo = docSnap.data().todos;
+        const doing = docSnap.data().doing;
+        const done = docSnap.data().done;
+        
+         todo.forEach(element => {
+          paintCard(todoCol, element.id, element.value);
+         });
+         doing.forEach(element => {
+          paintCard(doingCol, element.id, element.value);
+         });
+         done.forEach(element => {
+          paintCard(doneCol, element.id, element.value);
+         });
+         
+
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+
+
+      
       // ...
     } else {
       profilePic.setAttribute('src', "");
       greetingText.textContent = 'Signed out';
+      
       // User is signed out
       // ...
     }
   });
+
 

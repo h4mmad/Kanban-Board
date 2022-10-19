@@ -1,5 +1,8 @@
 import { options } from "./mutationOptions.js";
 import { drop, allowDrop, dragEnter, dragLeave} from "./dragEvents.js";
+import { docRef } from "./auth.js";
+import {arrayRemove, updateDoc,arrayUnion} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-firestore.js';
+
 
 export const todosCol = document.getElementById("todos");
 todosCol.addEventListener('drop', drop);
@@ -9,23 +12,29 @@ todosCol.addEventListener('dragleave', dragLeave);
 
 
 
-function callback(mutationList) {
+
+async function callback(mutationList) {
     for (const mutation of mutationList) {
         if (mutation.type === 'childList') {
           if (mutation.addedNodes.length === 1){
 
-            console.log('A node is added');
-            console.log(mutation.addedNodes[0].id);
-
             const node = mutation.addedNodes[0];
             node.classList.add('bg-info');
             node.setAttribute('data-column-type', 'todos');
+
+            await updateDoc(docRef, {
+                todos: arrayUnion({id : node.id, value: node.textContent})
+            })
             
           }
           else{
             const node = mutation.removedNodes[0];
             node.classList.remove('bg-info');
-            console.log('Node removed');
+
+            await updateDoc(docRef, {
+              todos: arrayRemove({id : node.id, value: node.textContent})
+            })
+
           }
         } else if (mutation.type === 'attributes') {
           console.log(`The ${mutation.attributeName} attribute was modified.`);
