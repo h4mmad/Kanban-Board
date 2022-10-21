@@ -1,7 +1,7 @@
 import {app} from './config.js'
 import {getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-auth.js'
 import { db } from './config.js';
-import {doc, getDoc} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-firestore.js';
+import {doc, getDoc, setDoc} from 'https://www.gstatic.com/firebasejs/9.12.0/firebase-firestore.js';
 import { paintCard } from './createCard.js';
 
 const provider = new GoogleAuthProvider(); 
@@ -29,6 +29,7 @@ async function signIn(auth, provider){
     try{
         const userCred = await signInWithPopup(auth, provider);
         console.log('User signed in');
+        console.log(userCred);
     }
     catch(error){
       console.log(error);
@@ -77,7 +78,12 @@ onAuthStateChanged(auth, async (user) => {
 
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+        await setDoc(docRef, {
+          doing: [],
+          done: [],
+          todos: []
+        });
+        // console.log("No such document!");
       }
 
 
