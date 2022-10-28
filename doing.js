@@ -20,18 +20,22 @@ async function callback(mutationList) {
             node.classList.add('bg-warning');
             node.setAttribute('data-column-type', 'doing');
 
-            await updateDoc(docRef, {
-              doing: arrayUnion({id : node.id, value: node.textContent})
-            })
-
+            if (docRef != ""){
+              await updateDoc(docRef, {
+                doing: arrayUnion({id : node.id, value: node.textContent})
+              })
+            }
           }
           else{
             const node = mutation.removedNodes[0];
             node.classList.remove('bg-warning');
             
-            await updateDoc(docRef, {
-              doing: arrayRemove({id : node.id, value: node.textContent})
-            })
+            if (docRef != ""){
+              await updateDoc(docRef, {
+                doing: arrayRemove({id : node.id, value: node.textContent})
+              })
+            }
+            
           }
         } else if (mutation.type === 'attributes') {
           console.log(`The ${mutation.attributeName} attribute was modified.`);

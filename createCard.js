@@ -9,15 +9,11 @@ export function createCard(cardValue){
     card.classList.add('card', 'card-body','bg-opacity-25', 'mt-2');
     card.style.cursor = "move";
     card.setAttribute('draggable', 'true');
-
     
     card.setAttribute('id', uuidv4());
     card.addEventListener('dragstart', drag);
     
-    
-    
-
-    const cardTitle = document.createElement("h3");
+    const cardTitle = document.createElement("h4");
     cardTitle.className = "card-title";
     cardTitle.textContent = cardValue;
     card.appendChild(cardTitle);
@@ -32,7 +28,7 @@ export function paintCard(col, id, value){
     card.setAttribute('draggable', 'true');
     card.setAttribute('id', id);
     card.addEventListener('dragstart', drag);
-    const cardTitle = document.createElement("h3");
+    const cardTitle = document.createElement("h4");
     cardTitle.className = "card-title";
     cardTitle.textContent = value;
     card.appendChild(cardTitle);

@@ -21,20 +21,25 @@ async function callback(mutationList) {
             const node = mutation.addedNodes[0];
             node.classList.add('bg-info');
             node.setAttribute('data-column-type', 'todos');
+            
 
-            await updateDoc(docRef, {
-                todos: arrayUnion({id : node.id, value: node.textContent})
-            })
+            if (docRef != ""){
+              await updateDoc(docRef, {
+                  todos: arrayUnion({id : node.id, value: node.textContent})
+              })
+            }
             
           }
           else{
             const node = mutation.removedNodes[0];
             node.classList.remove('bg-info');
 
-            await updateDoc(docRef, {
-              todos: arrayRemove({id : node.id, value: node.textContent})
-            })
-
+            if (docRef != ""){
+              await updateDoc(docRef, {
+                todos: arrayRemove({id : node.id, value: node.textContent})
+              })
+            }
+    
           }
         } else if (mutation.type === 'attributes') {
           console.log(`The ${mutation.attributeName} attribute was modified.`);

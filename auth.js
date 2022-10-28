@@ -14,12 +14,16 @@ const signInButton = document.getElementById('sign-in-button');
 const profilePic = document.getElementById('profile-pic');
 const greetingText = document.getElementById('greeting');
 
-signInButton.addEventListener('click', ()=>{
+signInButton.addEventListener('click', async ()=>{
     if (auth.currentUser == null){
-        signIn(auth, provider);
+        if( confirm("Signing in will refresh the board") === true){
+          await signIn(auth, provider);
+          window.location.reload();
+        }
     }
     else{
       auth.signOut();
+      window.location.reload();
     };
 });
 
@@ -56,8 +60,6 @@ onAuthStateChanged(auth, async (user) => {
       console.log(uid);
       docRef = doc(db, "users", uid);
 
-
-
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -92,7 +94,7 @@ onAuthStateChanged(auth, async (user) => {
     } else {
       profilePic.setAttribute('src', "");
       greetingText.textContent = 'Signed out';
-      
+      docRef = "";
       // User is signed out
       // ...
     }
